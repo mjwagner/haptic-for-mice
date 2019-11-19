@@ -2,25 +2,44 @@ This software contains the LabVIEW code needed to operate the haptic device desc
 Skilled reaching tasks for head-fixed mice using a robotic manipulandum. 
 Nature Protocols. MJ Wagner, J Savall, TH Kim, MJ Schnitzer, L Luo
 
-This publication also describes the operation of the code.
+This publication also describes the operation of the code. A PDF of the software operation is provided in SuppMethod.pdf.
 In brief, the project is opened via "Robot_NP.lvproj," 
 and code is run on a standard PC ("UI Main.vi"), an RT-PC ("RT Main.vi"), and an FPGA ("FPGA main.vi")
 
-A brief listing of several other project components:
-DataRecord.ctl - this typedef control specifies which variables are written to disk
+The software was written in LabView 2019 32-bit.
 
-TrialListElements.ctl - this typedef control specifies the values used to parametrize trial types
+A brief listing of all other project components:
+Typedef Controls folder: these do not need to be accessed to operate the device, but can be edited to extend functionality.
+Typedefs do not define variables, they define custom data types, as structures with individually accessible, named & typed variables.
+Editing a typedef redefines all instances of the custom data type in each subvi and across the devices.
+rewtype                 specifies different reward contingencies
+TrialListElements       specifies the values used to parametrize trial types
+robot state             state machine values for RT Main
+commands                list of operations that can be executed in the RT Main via instruction from UI Main
+trial type              list of trial types
+internalstate           state machine values for UI Main
+TrialParams             set of parameters passed from UI Main to RT Main
+DataRecord              specifies the set of variables that gets written to disk
+frontpanelrobotparams   Virtual friction magnitude, plus constants that parametrize the "virtual track" mechanics
 
-trial type.ctl - this typedef control specifies the set of possible trial types. Users can add additional trial
-types and define their movement conditions in computeTorque.vi
+Helper Functions folder on PC. Also do not need to be directly accessed to operate the device.
+computeTurnTarget       for turning movement trials, determines the rewarded end location
+ReadTrialList           reads trial list text file into the TrialListElements typedef cluster
+uniqueFile              makes sure file name doesn't exist, or appends numbers
+computeReward           calculates amount of time to open solenoid based on trial contingencies
 
-computeTorque.vi - this VI, which is executed once per ms, takes the instantaneous robot position and computes
-the desired instantaneous force applied to the handle. This varies by trial type. Users can add additional trial
-types associated with arbitrary force patterns, which are simple MATLAB-syntax mathematical expressions.
+Additional typedef controls on cRIO:
+MvmtHistory             Buffered kinematic variables to propagate from one RT execution cycle to the next
+RobotParams             Set of constants that define robot kinematic geometry
 
-enc2theta.vi, theta2enc.vi, inverse.vi, forward.vi - these VIs perform kinematic transformations
+Additional helper functions on cRIO:
+computeTorque.vi        Uses present and past instantaneous position/velocity to compute desired force, depending on trial type
+forward.vi              Forward kinematics transformation
+inverse.vi              Inverse kinematics transformation
+enc2theta.vi            Encoder counts to joint angles
+theta2enc.vi            Joint angles to encoder counts
 
 ***
 In addition, there is one MATLAB file:
-Force_from_Current.m - this post-hoc computation can be used to use the recorded motor currents to estimate
+Force_from_Current.m - this post-hoc computation uses the recorded motor currents to estimate
 the cartesian force applied at the robot handle.
