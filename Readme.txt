@@ -2,7 +2,8 @@ This software contains the LabVIEW code needed to operate the haptic device desc
 Skilled reaching tasks for head-fixed mice using a robotic manipulandum. 
 Nature Protocols. MJ Wagner, J Savall, TH Kim, MJ Schnitzer, L Luo
 
-This publication also describes the operation of the code. A PDF of the software operation is provided in SuppMethod.pdf.
+This publication also describes the operation of the code. 
+An abridged version of this protocol is in "GITHUB figure.pdf".
 In brief, the project is opened via "Robot_NP.lvproj," 
 and code is run on a standard PC ("UI Main.vi"), an RT-PC ("RT Main.vi"), and an FPGA ("FPGA main.vi")
 
